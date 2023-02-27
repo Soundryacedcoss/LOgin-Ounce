@@ -1,6 +1,38 @@
-.LoginPage{
-  margin: 2% 16%;
-  box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
-  padding: 2% 4%;
-  background-color: white;
+.App {
+  /* margin: 0 2%; */
+}
+.logo {
+  margin-top: -15%;
+  width: 250px;
+  height: 120px;
+  margin-left: 15%;
+}
+
+.banner_img {
+  width: 1140px;
+  height: 450px;
+  margin: 0 6%;
+}
+@media only screen and (max-width: 1120px) {
+  .banner_img {
+    width: 100%;
+  }
+}
+.product_img {
+  width: 300px;
+  height: 200px;
+}
+.card {
+  text-align: center;
+  width: 30%;
+  /* margin: 2% 14%; */
+}
+.shadow {
+  text-shadow: 2px 7px 5px rgba(0, 0, 0, 0.3),
+    0px -4px 10px rgba(255, 255, 255, 0.3);
+}
+.Products {
+}
+.Navbar_container {
+  /* position: fixed; */
 }
