@@ -1,11 +1,13 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import '@cedcommerce/ounce-ui/dist/index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import "@cedcommerce/ounce-ui/dist/index.css";
+/* Bootstrap css */
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+/* Propeller button */
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <App />

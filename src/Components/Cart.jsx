@@ -1,97 +1,91 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router";
+import { Link } from "react-router-dom";
+import emptyCart from "../image/emptyCart.png";
+import {
+  decreseQuantity,
+  deleteProduct,
+  increseQuantity,
+} from "../slice/DataSlice";
 import "./Cart.css";
 export const Cart = () => {
   const [Price, setPrice] = useState();
-  const [Emptymsg, setEmptyMsg] = useState({ display: "none" });
+  const [Emptymsg, setEmptyMsg] = useState({
+    display: "none",
+    textAlign: "center",
+  });
   const [Display, setDisplay] = useState();
   // Here i am using useNavigate for redirect to other page
   const navigate = useNavigate();
   const data = useSelector((store) => store.DataSlice);
-
+  const dispatch = useDispatch();
   // Here i am checking that the user ois loged in or not
-  const [userdataname, setUserdataname] = useState([]);
-  let userlogdata = localStorage.getItem("data", userdataname);
-  let userlogdata1 = JSON.parse(userlogdata);
-  console.log(userlogdata1);
-  useEffect(()=>{
-
-  },[])
+  useEffect(() => {}, []);
   // increase Button Functionaliy
   const IncreaseHandler = (val) => {
-    // for (let i = 0; i < productData.cartArr.length; i++) {
-    //   if (val === productData.cartArr[i].id) {
-    //     productData.cartArr[i].quantity += 1;
-    //     productData.setCartArr([...productData.cartArr]);
-    //   }
-    // }
+    for (let i = 0; i < data.cart.length; i++) {
+      if (val === data.cart[i].id) {
+        dispatch(increseQuantity(data.cart[i].id));
+      }
+    }
   };
   // decrese button functinality
   const DecreseHandler = (val) => {
-    // for (let i = 0; i < productData.cartArr.length; i++) {
-    //   if (val === productData.cartArr[i].id) {
-    //     if (productData.cartArr[i].quantity <= 1) {
-    //       alert("Warning ! your product will delete from cart");
-    //       productData.cartArr.splice(i, 1);
-    //       productData.setCartArr([...productData.cartArr]);
-    //     } else {
-    //       productData.cartArr[i].quantity -= 1;
-    //       productData.setCartArr([...productData.cartArr]);
-    //     }
-    //   }
-    // }
+    for (let i = 0; i < data.cart.length; i++) {
+      if (val === data.cart[i].id) {
+        dispatch(decreseQuantity(data.cart[i].id));
+      }
+    }
   };
   // Adding Price here
   let totalprice = 0;
-
-  //   useEffect(() => {
-  // for (let i = 0; i < productData.cartArr.length; i++) {
-  //   totalprice +=
-  //     productData.cartArr[i].quantity * productData.cartArr[i].price;
-  //   console.log(
-  //     productData.cartArr[i].quantity * productData.cartArr[i].price
-  //   );
-  //   setPrice(totalprice);
-  //   console.log(Price);
-  //   <Navigate to="/"></Navigate>;
-  // }
-
-  // if (productData.cartArr.length === 0) {
-  //   setDisplay({ display: "none" });
-  //   setEmptyMsg({ display: "block" });
-  // }
-  //   }, [productData.cartArr]);
-  const BuyButtonHandler = (e) => {
-    if (userlogdata1 === null) {
-      alert("Plese SignUp first..");
-      navigate("/Signup");
-    } else if (userlogdata1.length === 1) {
-      alert("Order Placed");
-      navigate("/");
-      EmptyButtonHandler();
+  // Calculating price
+  useEffect(() => {
+    for (let i = 0; i < data.cart.length; i++) {
+      totalprice += data.cart[i].quantity * data.cart[i].price;
+      setPrice(totalprice);
+      <Navigate to="/"></Navigate>;
     }
+    if (data.cart.length === 0) {
+      setDisplay({ display: "none" });
+      setEmptyMsg({ display: "block" });
+    }
+  }, [data.cart]);
+  // Buy button handler
+  const BuyButtonHandler = (e) => {
+    alert("Order Placed");
+    navigate("/");
   };
   // Here i am deleting all item from cart
   function EmptyButtonHandler() {
     window.location.reload(false);
   }
-
-  //  Back to main page
-  const BackHAndler = () => {
-    navigate("/");
+  // Delete button handler
+  const DeleteHandler = (e) => {
+    let confirm = window.confirm("Products will delete");
+    if (confirm === true) {
+      data.cart.forEach((val) => {
+        if (e === val.id) {
+          dispatch(deleteProduct(val.id));
+        }
+      });
+    }
   };
   return (
     <div>
       <div className="Cart">
         <div className="flex">
-          <button onClick={BackHAndler} className="BackBUtton">
-            Back To Home
-          </button>
+          <Link to={"/"}>
+            <button className="BackBUtton">Back</button>
+          </Link>
         </div>
-        <p className="EmptyCartPara" style={Emptymsg}>
-          Your CART is empty
+
+        <p style={Emptymsg}>
+          <center>
+            <img src={emptyCart} alt="" />
+          </center>
         </p>
         <div style={Display} className="cartDiv">
           <div className="ProductDetail">
@@ -102,28 +96,38 @@ export const Cart = () => {
                 </div>{" "}
                 <div className="ProductNameDiv Width">
                   {" "}
-                  <p>{item.name}</p> <p>${item.price}</p>
+                  <p>{item.name}</p> <p>₹{item.price}</p>
                 </div>{" "}
-                <div className="quantityButtonDiv">
+                <div className="quantityButtonDiv" style={{ display: "flex" }}>
                   <button
-                    className="Quantitybutton"
+                    className="Quantitybutton rounded w-100"
                     onClick={() => IncreaseHandler(item.id)}
                   >
                     +
                   </button>
                   <b>{item.quantity}</b>
                   <button
-                    className="Quantitybutton"
+                    className="Quantitybutton rounded w-100"
                     onClick={() => DecreseHandler(item.id)}
                   >
                     -
-                  </button>{" "}
+                  </button>
+                  <i
+                    class="fas fa-trash"
+                    onClick={(e) => DeleteHandler(item.id)}
+                    style={{
+                      fontSize: "30px",
+                      color: "red",
+                      marginTop: "4%",
+                      marginLeft: "4%",
+                    }}
+                  ></i>{" "}
                 </div>
               </div>
             ))}
           </div>
           <p style={Display} className="TotalPrice">
-            Total: {Price} rs
+            Total:₹ {Price} 
           </p>{" "}
           <br />
           <br />
